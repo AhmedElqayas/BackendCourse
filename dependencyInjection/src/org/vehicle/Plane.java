@@ -8,6 +8,6 @@ public class Plane implements Vehicle {
     }
     @Override
     public void saveVehicleData() {
-        vehicleRepository.saveVehicleData(2, "Plane", "Airbus");
+        vehicleRepository.saveVehicleData( "Plane", "Airbus");
     }
 }

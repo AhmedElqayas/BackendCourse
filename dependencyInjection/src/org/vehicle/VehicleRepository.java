@@ -1,30 +1,23 @@
 package org.vehicle;
 
-import java.io.InputStream;
 import java.sql.*;
-import java.util.Properties;
 
 public class VehicleRepository {
     private static Connection connection = null;
-    private static final Properties properties = new Properties();
+    public String databaseUrl;
+    public String databaseUserName;
+    public String databasePassword;
 
-    private static void loadProperties() {
-        try (InputStream stream = VehicleRepository.class.getClassLoader().getResourceAsStream("config.properties")) {
-            properties.load(stream);
-        } catch (Exception e) {
-            System.out.println("There is a problem in reading the properties.");
-        }
-    }
-
-    private static String readProperty(String propertyName) {
-        return properties.getProperty(propertyName);
+    public VehicleRepository(String databaseUrl, String databaseUserName, String databasePassword) {
+        this.databaseUrl = databaseUrl;
+        this.databaseUserName = databaseUserName;
+        this.databasePassword = databasePassword;
     }
 
 
     private Connection createConnection() throws SQLException, ClassNotFoundException {
-            loadProperties();
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(readProperty("database.url"), readProperty("database.username"), readProperty("database.password"));
+            connection = DriverManager.getConnection(databaseUrl, databaseUserName, databasePassword);
             System.out.println("Connection created successfully.");
         return connection;
     }
@@ -35,14 +28,13 @@ public class VehicleRepository {
         }
     }
 
-    public void saveVehicleData(int vehicleId, String vehicleType, String vehicleModel) {
+    public void saveVehicleData(String vehicleType, String vehicleModel) {
        try {
-           String insertQuery = "insert into vehicle values (?,?,?)";
+           String insertQuery = "insert into vehicle (vehicleType, vehicleBrand) values (?,?)";
 
            PreparedStatement preparedStatement = createConnection().prepareStatement(insertQuery);
-           preparedStatement.setInt(1, vehicleId);
-           preparedStatement.setString(2, vehicleType);
-           preparedStatement.setString(3, vehicleModel);
+           preparedStatement.setString(1, vehicleType);
+           preparedStatement.setString(2, vehicleModel);
 
            if (preparedStatement.execute()) {
                System.out.println("Data saved successfully.");

@@ -10,6 +10,6 @@ public class Car implements Vehicle {
     }
     @Override
     public void saveVehicleData() {
-        vehicleRepository.saveVehicleData(1, "Car", "BMW");
+        vehicleRepository.saveVehicleData( "Car", "BMW");
     }
 }
